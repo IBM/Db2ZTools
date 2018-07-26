@@ -71,6 +71,7 @@ Customize the security JCLs based on your security solution, policy and
 profiles before running the workflow.
 
 The following table lists the steps and any associated JCL file:
+
 |Step|    Description                                       |  JCL           |  Optional|
 |--- |---                                                   |---             |---       |
 |1   | CREATEDB  |  NO       | Create a DATABASE|
@@ -79,6 +80,7 @@ The following table lists the steps and any associated JCL file:
 |4 |   CREATETCMAP| YES  |     Create a RACF map to the trusted context|
 |5|    GRANTU      |YES |      Grant DBADM authority to a user|
  
+
 `deprovision.xml`
 
 This is the workflow that deprovisions a database from an existing DB2
@@ -93,6 +95,7 @@ file section on how to skip a certain step in the workflow. The fifth
 step is to drop the database.
  
 The following table lists the steps and any associated JCL file:
+
 |Step|    Description                                       |  JCL           |  Optional|
 |--- |---                                                   |---             |---       |
 |1  | Revoke DBADM authority from a user  |    REVOKEU    | YES|
