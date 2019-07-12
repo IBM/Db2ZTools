@@ -27,7 +27,7 @@ deprovision, analyze, apply, promote and sync up.
 
 Version 1.0
 
-Release Notes: (Released February 25, 2019)
+Release Notes: (Released July 12, 2019)
 
 
 **Available Steps**
