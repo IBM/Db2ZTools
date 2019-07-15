@@ -1,21 +1,8 @@
 **IBM Db2 DevOps Experience for z/OS**
 
-Db2 DevOps Experience allows organizations to bring applications to
-market more rapidly, at lower cost and with less risk. Db2 DevOps
-Experience helps Db2 for z/OS application development teams to implement
-DevOps practices by automating and standardizing tasks that would
-normally require interaction with an operations team. It provides
-collaboration between roles in an organization. Developers can easily
-provision a version of an application, make changes, test, and promote
-those changes for approval. Quality Engineers can easily automate the
-creation of Db2 test environments to speed and improve testing
-activities. Administrators can set the site rules for Db2 schema
-standards, review and approval of changes, and usage rules. These
-practices speed development time, improve quality, and integrate better
-into multi-platform development practices.
+Db2 DevOps Experience enables organizations to bring applications to market more rapidly, at lower cost and with less risk. Db2 DevOps Experience helps Db2 for z/OS application development teams to implement DevOps practices by automating and standardizing tasks that would normally require interaction with an operations team. It provides collaboration between roles in an organization. Developers can easily provision a version of an application, make changes, test, and promote those changes for approval. Quality Engineers can easily automate the creation of Db2 test environments to speed and improve testing activities. Administrators can set the site rules for Db2 schema standards and usage rules, and review and approve changes. These practices speed development time, improve quality, and better integrate into multi-platform development practices.
 
-The Db2 DevOps Experience plug-in includes steps to provision,
-deprovision, analyze, apply, promote and sync up.
+The Db2 DevOps Experience plug-in includes steps to provision, deprovision, analyze, apply, promote and sync.
 
 **<ins>Platform Support:</ins>**
 
