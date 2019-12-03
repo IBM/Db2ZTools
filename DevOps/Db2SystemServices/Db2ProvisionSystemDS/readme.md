@@ -13,7 +13,7 @@ This readme is intended for the service provider, who configures and makes the D
 ## About the sample Db2 data sharing software service template
 
 You can use the sample Db2 software service template, to build your own Db2 software service template to provision multiple Db2 12 for z/OS data sharing group instances in a “typical Db2 configuration” with the following attributes:
-*  The data sharing group name, group attach name, member names (Db2 subsystems), and all other names are based on the cluster prefix character that you specify when building the template according to the rules described in the [naming convention](#naming-conventions-for-the-sample-db2-data-sharing-software-service-template).
+*  The data sharing group name, group attach name, member names (Db2 subsystems), and all other names are based on the cluster prefix character that you specify when building the template, according to the rules described in the [naming convention](#naming-conventions-for-the-sample-db2-data-sharing-software-service-template). Throughout this information, all examples assume that  `Z` is specified for the cluster prefix character.
 * Accepts only TCP/IP connections.
 * Subsystem parameter (zPARMS) settings, as recommended by the latest best practices.
 * Three dual sets of active logs, and dual archive logs with timestamp.
@@ -141,7 +141,7 @@ Before building your own template based on the sample, verify with the following
 
 
 ## Naming conventions for the sample Db2 data sharing software service template
-The template uses the following naming conventions The naming conventions are very important for coordination of the IBM Cloud Provisioning and Management register between provision and deprovision processes.
+The template uses the following naming conventions The naming conventions are very important for coordination of the IBM Cloud Provisioning and Management register between provision and deprovision processes. Throughout this information, all examples assume that  `Z` is specified for the cluster prefix character.
 
 In the table following characters have these meanings:
 - `c`= Cluster instance name prefix
@@ -216,7 +216,7 @@ If you are using the sample artifacts before building your own template, you mus
 |`ARCHDEVT` (`UNIT`)|`TAPE`|`SYSDA`|
 |`ARCHDEV2` (`UNIT2`)|blank (no value)|`SYSDA`|
 |`ARCHTS` (`TSTAMP`)|`NO`|`YES`|
-|`ASCSSID`|blank (no value)|`819`|
+|`ASCCSID`|blank (no value)|`819`|
 |`BP1`|`0`|`5000`|
 |`BP2`|`0`|`5000`|
 |`BP8K0`|`2000`|`5000`|
