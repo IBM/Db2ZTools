@@ -14,3 +14,11 @@ This package also discusses how to integrate the services with different SCM sys
 Download and unzip the package. See the white paper in the package for usage documentation.
 
 **This is a package, not a plug-in. Do not attempt to load this content in IBM UrbanCode Deploy as a plug-in.**
+
+## Version History
+
+### v7fix01
+* Update plugin versions for UrbanCode Deploy v7.x.x.
+
+### v7
+* Add support for Java stored procedure deployments.
