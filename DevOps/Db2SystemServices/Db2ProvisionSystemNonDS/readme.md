@@ -1,4 +1,4 @@
-# Creating services for provisioning standalone Db2 for z/OS subsystems as a service (DBaaS) with the Db2 software services template 
+# Creating standalone Db2 subsystem provisioning services
 
 With the Db2 software services template, you can create services that rapidly provision from scratch one or multiple standalone Db2 subsystems, in IBM Cloud Provisioning and Management for z/OS. For information about cloud provisioning, including a description of the roles involved, see [Cloud provisioning services](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.1.0/com.ibm.zos.v2r1.izua700/izuprog_CloudProvisioning.htm#CloudProvisioningServices). 
 
@@ -41,32 +41,30 @@ Later, you can also use the sample Db2 software service template to deprovision 
 The files of the service are stored in a directory in z/OS UNIX System Services (USS), and the directory and files must be accessible to z/OSMF. All required files are compressed into the `Db2ProvisionSystemNonDS.pax` file.
 
 1. Download the `Db2ProvisionSystemNonDS.pax` file.
-2. Use FTP in binary mode to upload the `Db2ProvisionSystemNonDS.pax` file to the directory where you want to store the service in  USS. 
+2. Use FTP in binary mode to upload the `Db2ProvisionSystemNonDS.pax` file to the directory where you want to store the service in USS. The maximum length for the directory name is 40 characters.
 3. Extract the file into the directory of your choice, for example: 
 
-```
-pax -rvf Db2ProvisionSystemNonDS.pax
-```
+    ```
+    pax -rvf Db2ProvisionSystemNonDS.pax
+    ```
 
-Inside the directory that you specified, the extracted directory `<service-base-dir>` has the following structure:
+    Inside the directory that you specified, the extracted directory `<service-base-dir>` has the following structure:
 
-|File|Description| 
-|----|-----------|
-|`dsntiwin.xml`|A workflow to provision a Db2 standalone subsystem|
-|`actions.xml`|A workflow for actions of the service|
-|`dsndeprv.xml`|A workflow to deprovision a Db2 standalone subsystem|
-|`dsnstart.xml`|A workflow for starting the Db2 subsystem|
-|`dsnstop.xml`|A workflow for stopping the Db2 subsystem|
-|`dsndddf.xml`|A workflow for displaying DDF details for the Db2 subsystem|
-|`dsnoptft.xml`|A workflow for enabling optional features (Db2 REST services, ODBC, JDBC)|
-|`dsntivin`|The input property file used by the workflows|
-|`dsnti*`|Several JCL templates used by the `dsntiwin.xml`, `dsnoptft.xml`, `dsnstart.xml`, `dsnstop.xml`, and `dsndeprv.xml` workflows|
-|`dsnte*`|Several JCL templates used by the `dsntiwin.xml` and `dsnoptft.xml` workflows|
-|`dsntd*`|Several JCL templates used by `dsndeprv.xml` workflow|
-|`validatessn.rexx`|A REXX exec used to verify that the subsystem name is no longer than 4 characters, used by the `dsntiwin.xml` workflow|
-|`db2provision.jar`|Db2-supplied Java applications to generate a RACF PassTicket, plus JDBC IVP applications.|
+    |File|Description| 
+    |----|-----------|
+    |`dsntiwin.xml`, `dsnopent.xml`|Workflows to provision a Db2 standalone subsystem and enable optional features (Db2 REST services, ODBC, JDBC)|
+    |`actions.xml`|A workflow for actions of the service|
+    |`dsndeprv.xml`|A workflow to deprovision a Db2 standalone subsystem|
+    |`dsnstart.xml`|A workflow for starting the Db2 subsystem|
+    |`dsnstop.xml`|A workflow for stopping the Db2 subsystem|
+    |`dsndddf.xml`|A workflow for displaying DDF details for the Db2 subsystem|
+    |`dsndgrpd.xml`|A workflow for issuing the -DISPLAY GROUP DETAIL command|
+    |`dsnoptft.xml`, `dsnopent.xml`|Workflows for enabling optional features (Db2 REST services, ODBC, JDBC)|
+    |`dsnti*`|Several JCL templates used by the `dsntiwin.xml`, `dsnopent.xml`, `dsnstart.xml`, `dsnstop.xml`, and `dsndeprv.xml` workflows|
+    |`dsnte*`|Several JCL templates used by the `dsntiwin.xml` and `dsnopent.xml` workflows|
+    |`dsntivin`|The input property file used by the workflows|
 
-4. Copy `db2provision.jar` in binary into your installation `DB2BASE/classes` directory.
+In addition, copy `db2provision.jar` in binary into your installation's DB2BASE/classes directory. This jar file is installed by default in the directory specified by the DDDEF created for SDSNACLS. 
 
 ## Preparing the environment for the Db2 software service template
 
@@ -84,7 +82,12 @@ Before building your own template based on the sample, verify with the following
     - **JDBCC12** for Db2 JDBC/SQLJ. All variables must be set in `Section 6: Db2 Java properties`,  in the `dstnivin` file. 
     - **JDBCC17** for Db2 ODBC. The following variables must be set in `Section 7: Host language data sets`,  in the `dstnivin` file: CCOMP, CPPAUTCL, LELKED, LEPLMSGL, and LERUN.
     - **HDDA211** for z/OS Application Connectivity.
-    
+* Verify installation, and provide directories where indicated, for the following installed FMIDs: 
+    - **JDBCC12** for Db2 JDBC/SQLJ. All variables must be set in `Section 6: Db2 Java properties`,  in the `dstnivin` file. 
+    - **JDBCC17** for Db2 ODBC. The following variables must be set in `Section 7: Host language data sets`,  in the `dstnivin` file: CCOMP, CPPAUTCL, LELKED, LEPLMSGL, and LERUN.
+    - **HDDA211** for z/OS Application Connectivity.
+    - **HDBCC1K** for Db2 Utilities Suite for z/OS.
+
 ### Network administrator tasks
 * Provide a range of TCP/IP ports to be used under the Network Resource Pool (NRP). The ports in this range cannot be part of the TCP/IP Profile. 
 
@@ -283,7 +286,8 @@ To provision a standalone Db2 subsystem, the sample template completes the follo
 The following actions are available from z/OSMF Cloud Provisioning Software Services for the provisioned Db2 subsystem:
    * Start the Db2 subsystem   
    * Stop the Db2 subsystem 
-   * Display DDF 
+   * Display DDF information 
+   * Display group information
    * Enable the optional features (ODBC, JDBC, and REST services) 
    * Deprovision the Db2 subsystem
 
@@ -402,12 +406,6 @@ The following tables show the authorizations required for certain steps of the s
 |step22c|`DSNTEJ1L`|${IVPSQLID}||For Db2 authorization, the user ID must have primary or secondary installation SYSADM authority. IVPSQLID is specified in the IVP SQL ID field of DSNTIPG.|
 |step22d|`DSNTEJ2A`|${IVPSQLID}||For Db2 authorization, the user ID must have primary or secondary installation SYSADM authority. IVPSQLID is specified in the IVP SQL ID field of DSNTIPG.|
 |stepJTU|`DSNTIJTU`|${INSSQLID}|Creates and grants usage on STOGROUP for user data TO ${INSGRLST}||For Db2 authorization, the user ID must have primary or secondary installation SYSADM authority. INSGRLST is specified in the INSTALL GRANTEE(S) field of DSNTIPG.|
-|stepJRP|`DSNTIJRP`|SYSADM1/${PROTADMN}|Enables Db2 REST services|For Db2 authorization, the user ID must have primary or secondary installation SYSADM authority.|
-|stepODBCBIND|`DSNTIJCL`|SYSADM1/${PROTADMN}|Bind and grants usage of PKG/PLAN TO ${INSGRLST}|For Db2 authorization, the user ID must have primary or secondary installation SYSADM authority. INSGRLST is specified in the INSTALL GRANTEE(S) field of DSNTIPG.|
-|stepODCBVERFIY|`DSNTEJ8`|SYSADM1/${PROTADMN}||For Db2 authorization, the user ID must have primary or secondary installation SYSADM authority.|
-|stepJDBCBIND|Shell-JCL inline|Workflow executor|Uses DB2Binder utility, which binds the Db2 packages that are used at the data server by the IBM Data Server Driver for JDBC and SQLJ into the NULLID collection, and grants EXECUTE authority on the packages to PUBLIC.|1) The workflow executor ID MUST have RACF privilege to generate PassTickets for others <br> 2) The BIND will be performed under SYSADM1/${JCCSID} ID, using a generated PASSTICKET instead of sending clear text passwords to connect to the Db2 subsystem. <br>See more details in [Using RACF PassTickets for optional features](#using-racf-passtickets-for-optional-features)|
-|stepJDBCVerifyT2|Shell-JCL inline|Workflow executor|Performs local connection (JCC Type-2) to the provisioned Db2 subsystem and perform SQL queries against the Db2 sample database. Records the output into /tmp/db2-ssid-tej91t2 ||
-|stepJDBCVerifyT4|Shell-JCL inline|Workflow executor|Performs remote connection (JCC Type-4) to the provisioned Db2 subsystem and perform SQL queries against the Db2 sample database. Records the output into `/tmp/db2-ssid-tej91t4`|The connection and verification is performed under SYSADM1/${JCCSID} ID, using a generated PASSTICKET instead of sending clear text passwords to connect to the Db2 subsystem. <br> See more details in [Using RACF PassTickets for optional features](#using-racf-passtickets-for-optional-features)|
 
 #### Authorizations for the START DB2 action (`dsnstart.xml`)
 
@@ -432,7 +430,7 @@ The following tables show the authorizations required for certain steps of the s
 |stepDJMD|`DSNTDJMD`|SYSADM1/${PROTADMN}||A console that has master authority, or a console operator with sufficient RACF authorization.|
 
 
-#### Authorizations for the optional features enablement action (`dsnoptft.xml`)
+#### Authorizations for the optional features enablement action (`dsnopent.xml`)
 
 |Step name|Job name|Run as user|Job description|RACF authorization|
 |----|----|----|----|----|
