@@ -1,4 +1,4 @@
-# Creating services for provisioning Db2 for z/OS data sharing groups as a service (DBaaS) with the Db2 software services template 
+# Creating Db2 for z/OS data sharing group provisioning services
 
 With the Db2 data sharing software services template, you can create services that rapidly provision from scratch one or multiple Db2 data sharing groups, in IBM Cloud Provisioning and Management for z/OS. For information about cloud provisioning, including a description of the roles involved, see [Cloud provisioning services](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.1.0/com.ibm.zos.v2r1.izua700/izuprog_CloudProvisioning.htm#CloudProvisioningServices). 
 
@@ -42,32 +42,36 @@ You can also use the sample Db2 software service template for actions against th
 The files of the service are stored in a directory in z/OS UNIX System Services (USS), and the directory and files must be accessible to z/OSMF. All required files are compressed into the `Db2ProvisionSystemDS.pax` file.
 
 1. Download the `Db2ProvisionSystemDS.pax` file.
-2. Use FTP in binary mode to upload the `Db2ProvisionSystemDS.pax` file to the directory where you want to store the service in  USS. 
+2. Use FTP in binary mode to upload the `Db2ProvisionSystemDS.pax` file to the directory where you want to store the service in USS. The maximum length for the directory name is 40 characters. 
 3. Extract the file into the directory of your choice, for example: 
+    
+    ```
+    pax -rvf Db2ProvisionSystemDS.pax
+    ```
 
-```
-pax -rvf Db2ProvisionSystemDS.pax
-```
+    Inside the directory that you specified, the extracted directory `<service-base-dir>` has the following structure:
 
-Inside the directory that you specified, the extracted directory `<service-base-dir>` has the following structure:
+    |File|Description| 
+    |----|-----------|
+    |`dsntiwpc.xml`, `dsnopent.xml`| Workflows to provision a Db2 data sharing group and enable optional features (Db2 REST services, ODBC, JDBC)|
+    |`actions.xml`|A workflow for actions of the service|
+    |`dsndeprc.xml`|A workflow to deprovision the Db2 data sharing group|
+    |`dsnstart.xml`|A workflow for starting specific Db2 data sharing members|
+    |`dsnstop.xml`|A workflow for stopping specific Db2 data sharing members|
+    |`dsndddf.xml`|A workflow for displaying DDF details for the Db2 data sharing group|
+    |`dsndgrpd.xml`|A workflow for displaying details of the Db2 data sharing group|
+    |`dsnoptft.xml`, `dsnopent.xml`|Workflows for enabling optional features (Db2 REST services, ODBC, JDBC)|
+    |`dsntivin`|The input property file for the originating member|
+    |`dsntivia`|The input property file for additional members|
+    |`dsnti*`|Several JCL templates used by the `dsntiwpc.xml`, `dsnopent.xml`, `dsnstart.xml`, `dsnstop.xml`, `dsnddf.xml`, `dsndgrpd.xml`, and `dsndeprc.xml` workflows|
+    |`dsnta*`|Several JCL templates used by the `dsntiwpc.xml` workflow, specific to additional members|
+    |`dsnte*`|Several JCL templates used by the `dsntiwpc.xml` and `dsnopent.xml` workflows|
+    |`dsntd*`|Several JCL templates used by `dsndeprc.xml` workflow|
+    |`dsntx*`|Several JCL templates used by `dsndeprc.xml` workflow, specific to additional members|
 
-|File|Description| 
-|----|-----------|
-|`dsntiwpc.xml`, `dsnopent.xml`| Workflows to provision a Db2 data sharing group and enable optional features (Db2 REST services, ODBC, JDBC)|
-|`actions.xml`|A workflow for actions of the service|
-|`dsndeprc.xml`|A workflow to deprovision the Db2 data sharing group|
-|`dsnstart.xml`|A workflow for starting specific Db2 data sharing members|
-|`dsnstop.xml`|A workflow for stopping specific Db2 data sharing members|
-|`dsndddf.xml`|A workflow for displaying DDF details for the Db2 data sharing group|
-|`dsndgrpd.xml`|A workflow for displaying details of the Db2 data sharing group|
-|`dsnoptft.xml`, `dsnopent.xml`|Workflows for enabling optional features (Db2 REST services, ODBC, JDBC)|
-|`dsntivin`|The input property file for the originating member|
-|`dsntivia`|The input property file for additional members|
-|`dsnti*`|Several JCL templates used by the `dsntiwpc.xml`, `dsnopent.xml`, `dsnstart.xml`, `dsnstop.xml`, `dsnddf.xml`, `dsndgrpd.xml`, and `dsndeprc.xml` workflows|
-|`dsnta*`|Several JCL templates used by the `dsntiwpc.xml` workflow, specific to additional members|
-|`dsnte*`|Several JCL templates used by the `dsntiwpc.xml` and `dsnopent.xml` workflows|
-|`dsntd*`|Several JCL templates used by `dsndeprc.xml` workflow|
-|`dsntx*`|Several JCL templates used by `dsndeprc.xml` workflow, specific to additional members|
+
+In addition, copy `db2provision.jar` in binary into your installation's DB2BASE/classes directory. This jar file is installed by default in the directory specified by the DDDEF created for SDSNACLS. 
+
 
 ## Preparing the environment for the Db2 software service template
 
@@ -84,11 +88,12 @@ Before building your own template based on the sample, verify with the following
 * Provide the SMP/E Db2 product target libraries, with the the following Db2 12 APARs applied: PH09857; and if Db2 REST services will be enabled on the provisioned Db2 subsystems, APARs PI70652 and PI96649.  
 * Certify that the SMP/E Db2 product target libraries for SDSNEXIT, SDSNLINK, SDSNLOAD, SDSNLOD2 and IRLM RESLIB are APF-authorized <br>**Note:** SDSNLOD2 is a PDSE data set, which contains JDBC and SQLJ DLLs. Although DB2 does not require that SDSNLOD2 be APF-authorized, be aware that if this data set is in a STEPLIB data set concatenation of an address space that does need APF authorization, SDSNLOD2 must also be APF-authorized. The provisioning template concatenates SDSNLOD2 when verifying JDBC local connection (Type-2) in Optional Features.
 * Provide data set names, including for host languages (see `Section 7: Host language data sets`, in the `dsntivin` and `dsntivia` files.) 
-* Provide directories for the following installed FMIDs: 
-    - **JDBCC12** for Db2 JDBC/SQLJ. All variables must be set in `Section 6: Db2 Java properties`,  in the `dsntivin` and `dsntivia` files.. 
-    - **JDBCC17** for Db2 ODBC. The following variables must be set in `Section 7: Host language data sets`,  in the `dstnivin` and `dsntivia` files.: CCOMP, CPPAUTCL, LELKED, LEPLMSGL, and LERUN.
+* Verify installation, and provide directories where indicated, for the following installed FMIDs: 
+    - **JDBCC12** for Db2 JDBC/SQLJ. All variables must be set in `Section 6: Db2 Java properties`,  in the `dstnivin` file. 
+    - **JDBCC17** for Db2 ODBC. The following variables must be set in `Section 7: Host language data sets`,  in the `dstnivin` file: CCOMP, CPPAUTCL, LELKED, LEPLMSGL, and LERUN.
     - **HDDA211** for z/OS Application Connectivity.
-* Define sufficient coupling facility (CF) structures for all possible provisioned data sharing group instances, following the [naming conventions](#naming-conventions) and the sizing for a medium configuration, as described in [Coupling facility structure size allocation](https://www.ibm.com/support/knowledgecenter/SSEPEK_12.0.0/inst/src/tpc/db2z_cfstructuresizeallocation.html)
+    - **HDBCC1K** for Db2 Utilities Suite for z/OS.
+* Define sufficient coupling facility (CF) structures for all possible provisioned data sharing group instances, following the [naming conventions](#naming-conventions) and the sizing for a medium configuration, as described in [Coupling facility structure size allocation](https://www.ibm.com/support/knowledgecenter/SSEPEK_12.0.0/inst/src/tpc/db2z_cfstructuresizeallocation.html).
     
 ### Network administrator tasks
 * Provide a range of DVIPAs and TCP/IP ports to be used under the Network Resource Pool (NRP).
@@ -327,7 +332,7 @@ The following actions are available from z/OSMF Cloud Provisioning Software Serv
    * START DB2 - Start the Db2 subsystem, including the SETSSI ADD command in an IPL)  
    * STOP DB2 - normal stop of the Db2 system
    * DISPLAY DDF - display DDF information to the UI
-   * DISPLAY GROUP - display data sharing group in formation to the UI
+   * DISPLAY GROUP - display data sharing group information to the UI
    * Enable optional features - (ODBC, JDBC, and REST services) 
 
 
@@ -452,12 +457,6 @@ The following tables show the authorizations required for certain steps of the s
 |stepEJ1L|`DSNTEJ1L`|${IVPSQLID}||For Db2 authorization, the user ID must have primary or secondary installation SYSADM authority. IVPSQLID is specified in the IVP SQL ID field of DSNTIPG.|
 |stepEJ2A|`DSNTEJ2A`|${IVPSQLID}||For Db2 authorization, the user ID must have primary or secondary installation SYSADM authority. IVPSQLID is specified in the IVP SQL ID field of DSNTIPG.|
 |stepJTU|`DSNTIJTU`|${INSSQLID}|Creates and grants usage on STOGROUP for user data TO ${INSGRLST}||For Db2 authorization, the user ID must have primary or secondary installation SYSADM authority. INSGRLST is specified in the INSTALL GRANTEE(S) field of DSNTIPG.|
-|stepJRP|`DSNTIJRP`|SYSADM1/${PROTADMN}|Enables Db2 REST services|For Db2 authorization, the user ID must have primary or secondary installation SYSADM authority.|
-|stepODBCBIND|`DSNTIJCL`|SYSADM1/${PROTADMN}|Bind and grants usage of PKG/PLAN TO ${INSGRLST}|For Db2 authorization, the user ID must have primary or secondary installation SYSADM authority. INSGRLST is specified in the INSTALL GRANTEE(S) field of DSNTIPG.|
-|stepODCBVERFIY|`DSNTEJ8`|SYSADM1/${PROTADMN}||For Db2 authorization, the user ID must have primary or secondary installation SYSADM authority.|
-|stepJDBCBIND|Shell-JCL inline|Workflow executor|Uses DB2Binder utility, which binds the Db2 packages that are used at the data server by the IBM Data Server Driver for JDBC and SQLJ into the NULLID collection, and grants EXECUTE authority on the packages to PUBLIC.|1) The workflow executor ID MUST have RACF privilege to generate PassTickets for others <br> 2) The BIND will be performed under SYSADM1/${JCCSID} ID, using a generated PASSTICKET instead of sending clear text passwords to connect to the Db2 subsystem. <br>See more details in [Using RACF PassTickets for optional features](#using-racf-passtickets-for-optional-features)|
-|stepJDBCVerifyT2|Shell-JCL inline|Workflow executor|Performs local connection (JCC Type-2) to the provisioned Db2 subsystem and perform SQL queries against the Db2 sample database. Records the output into /tmp/db2-ssid-tej91t2 ||
-|stepJDBCVerifyT4|Shell-JCL inline|Workflow executor|Performs remote connection (JCC Type-4) to the provisioned Db2 subsystem and perform SQL queries against the Db2 sample database. Records the output into `/tmp/db2-ssid-tej91t4`|The connection and verification is performed under SYSADM1/${JCCSID}  ID, using a generated PASSTICKET instead of sending clear text passwords to connect to the Db2 subsystem. <br> See more details in [Using RACF PassTickets for optional features](#using-racf-passtickets-for-optional-features)|
 
 #### Authorizations for the START DB2 action (`dsnstart.xml`)
 
