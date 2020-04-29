@@ -4,20 +4,23 @@ You can use this service template and IBM Db2 DevOps Experience for z/OS to rapi
 
 The software service template is built on the z/OSMF cloud provisioning services infrastructure. For information about about how to load and use the service in z/OSMF, see [Software Services Task](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zosmfcore.softwareconfig.help.doc/izuSChpSoftwareConfigTask.html).
 
-The service includes a list of actions for **provision** and **deprovision**.
+The service includes a list of actions for **provision**, **create schema**, **drop schema** and **deprovision**.
 
+## Contents
 This readme contains the following sections:
-* [**Prerequisites**](#Prerequisites)
+* [**Prerequisites**](#prerequisites)
 * [**Setting up the service**](#setting-up-the-service)
-* [**`provision.xml`**](#provision.xml)
-* [**`deprovision.xml`**](#deprovistion.xml)
-* [**`clouddb2.input`**](#clouddb2.input)
+* [**`provision.xml`**](#provisionxml)
+* [**`createschema.xml`**](#createxml)
+* [**`dropschema.xml`**](#dropschemaxml)
+* [**`deprovision.xml`**](#deprovisionxml)
+* [**`clouddb2.input`**](#Clouddb2input)
 
 ## Prerequisites
 * A Db2 subsystem is installed on the system where the provision will take place.
 * IBM Db2 DevOps Experience for z/OS V1.1 is installed with APAR UI63018 or higher.
 * The workflow files are copied from the factory location and the `clouddb2.input` file is customized for use in the local environment.
-* The following environment variables are customized in `doeProvision.sh` and `doeDeprovision.sh`, which are supplied with the service.
+* The following environment variables are customized in `deprovision.sh`, which is supplied with the service.
     * DESP_JAR: the full path to the directory that contains `DOEExecutor-1.0.jar`, which is supplied with the service
     * JAVA_HOME: the full path to the JDK installation directory
 * If you are using RACF security for Db2 and using the default `CREATERACF.jcl` to create RACF group and user, RACF profile BATCH must be defined on the subsystem where the provision will take place. If you are not using `<mvsname>.BATCH`, you must modify the `CREATERACF.jcl` to reflect the RACF BATCH profile that is defined in the environment.
@@ -28,14 +31,18 @@ The files of the service are stored in a directory in z/OS UNIX System Services 
 1. Download the `Db2SchemaService.pax` file.
 2. Use FTP to upload the pax file in binary mode to a directory where you want to store the service in USS.
 3. Extract the contents of the pax file in the directory where you put the pax file.
-    - `pax -rvf Db2SchemaService.pax`
+     ```
+     pax -rvf Db2SchemaService.pax
+     ```
 
 Extracting produces the following directory structure:
 ```
     <service base directory>    -- All sub-directories and files of the service
         <security>              -- Workflow to provision security configuration
         provision.xml           -- Workflow to provision schema like
-        deprovision.xml         -- Workflow to deprovision schema
+        createschema.xml        -- Workflow to create schema
+        dropschema.xml          -- Workflow to drop schema
+        deprovision.xml         -- Workflow to deprovision schema 
         actions.xml             -- Actions of the service
         clouddb2.input          -- Sample input variable file to be customized
         doeProvision.sh         -- Provision shell script
@@ -44,12 +51,25 @@ Extracting produces the following directory structure:
 ```
 
 ## `provision.xml`
-The workflow that is also the first action is triggered automatically when you run from the published software service template. The workflow provisions a logical collection of database objects in an existing Db2 subsystem like those in another. It consists of the following steps:
+The workflow that is also the first action is triggered automatically when you run from the published software service template. The workflow generates a unique instance name. It consists of the following steps:
 
 0. Generate a unique instance name from which the required unique values of workflow variables are derived, and prepare the related variables.
+
+Customize the security JCLs based on your security solution, policy, and profiles before running the workflow.
+
+The following table lists the steps:
+
+| Step | Description                                        | JCL            | Optional |
+| ---  | ---                                                | ---            | ---      |
+| 0    | Provision instance name dynamically                | N/A(REST call) | NO       |
+
+## `createschema.xml`
+
+The workflow provisions a logical collection of database objects in an existing Db2 subsystem like those in another. It consists of the following steps:
+
 1. Call the DevOps Experience for Db2 for z/OS server to dynamically provision the schema of the data objects like the source environment.
 2. Retrieve the schema and database name of the provisioned schema instance and JDBCURL for Java application to connect to the Db2 subsystem.
-3. Call the provisionSecurity workflow to provision security configuration. The provisionSecurity workflow contains the following sub-steps:
+3. Call the `provisionSecurity.xml` workflow to provision security configuration. The provisionSecurity workflow contains the following sub-steps:
     1. Add a RACF group and a user, to grant DBADM to the group and to give permission of running BATCH job, assuming the profile BATCH is defined ahead, on the subsystem.
     2. Create a role with DBADM authority of the databases created in the first step, and to create a local and a remote trusted context with the role. This should be run once and shared among the different instances.
     3. Create a RACF map to map a distributed identity to the trusted context.
@@ -67,7 +87,7 @@ The following table lists the steps:
 | 1a   | Retrieve the information of the provisioned schema | N/A            | NO       |
 | 2    | Provision security configuration                   | N/A            | YES      |
 
-Sub-steps of `provisionSecurity.xml`:
+The following table lists the sub-steps of the `provisionSecurity.xml` workflow:
 
 | Step | Description                                                                     | JCL         | Optional |
 | ---  | ---                                                                             | ---         | ---      |
@@ -76,24 +96,26 @@ Sub-steps of `provisionSecurity.xml`:
 | 3    | Create a RACF map to the trusted context                                        | CREATETCMAP | YES      |
 | 4    | Grant DBADM authority of these objects to a user                                | GRANTU      | YES      |
 
-## `deprovision.xml`
-The workflow that drives the "deprovision" action for the instance and deprovisions a logical collection of database objects under a schema from an existing Db2 subsystem. The workflow consists of the following steps:
 
-1. Call deprovisionSecurity workflow to deprovision security configuration. The deprovisionSecurity workflow contains the following sub-steps:
+## `dropschema.xml`
+
+The workflow that drives the "dropschema" action for the instance and deprovisions a logical collection of database objects under a schema from an existing Db2 subsystem. The workflow consists of the following steps:
+
+1. Call the `deprovisionSecurity.xml` workflow to deprovision security configuration. The deprovisionSecurity workflow contains the following sub-steps:
     1. Revoke the DBADM privilege from the user that the database objects are provisioned for.
     2. Delete the provisioned RACF map.
     3. Delete the provisioned trusted contexts and role.
     4. Delete the provisioned RACF group and user. All the above sub-steps are optional based on the need, refer to the description of input variable file section on how to skip a certain step in the workflow.
-2. Deprovision the provisioned schema instance.
+2. Drop the provisioned schema instance.
 
 The following table lists the steps:
 
 | Step | Description                        | JCL            | Optional |
 | ---  | ---                                | ---            | ---      |
-| 1    | Deprovision security configuration | N/A            | YES      |
-| 2    | Deprovision the provisioned schema | N/A            | NO       |
+| 1    | Drop schema security configuration | N/A            | YES      |
+| 2    | Drop schema the provisioned schema | N/A            | NO       |
 
-Sub-steps of `deprovisionSecurity.xml`:
+The following table lists the sub-steps of the `deprovisionSecurity.xml`workflow:
 
 | Step | Description                            | JCL         | Optional |
 | ---  | ---                                    | ---         | ---      |
@@ -102,7 +124,21 @@ Sub-steps of `deprovisionSecurity.xml`:
 | 3    | Delete trusted contexts and role       | DELETETC    | YES      |
 | 4    | Delete a RACF group and user           | DELETERACF  | YES      |
 
+## `deprovision.xml`
+
+The workflow that completes the "deprovision" action for the instance. The workflow consists of the following steps:
+
+1. Deprovision to mark the workflow of the provisioned schema instance as completed.
+
+The following table lists the steps:
+
+| Step | Description                        | JCL            | Optional |
+| ---  | ---                                | ---            | ---      |
+| 0    | Deprovision completed              | N/A            | YES      |
+
+
 ## `clouddb2.input`
+
 The workflow variable input file, which contains the following properties:
 
 | Property | Remarks |
@@ -124,7 +160,6 @@ The workflow variable input file, which contains the following properties:
 | doeHost          | The hostname of the Db2 DevOps Experience (DOE) server on the target Db2 subsystem|
 | doePort          | The port number of the DOE server on the target Db2 subsystem|
 | doeUsername      | The user name of the DOE server on the target Db2 subsystem|
-| doePassword      | The user password of the DOE server on the target Db2 subsystem. Leave the value as empty.|
 | appName          | The application name in the DOE server on the target Db2 subsystem|
 | envName          | The environment name in the DOE server on the target Db2 subsystem|
 | teamName         | The team name in DOE server on the target Db2 subsystem|
