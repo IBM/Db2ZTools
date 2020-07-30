@@ -64,7 +64,11 @@ The files of the service are stored in a directory in z/OS UNIX System Services 
     |`dsnte*`|Several JCL templates used by the `dsntiwin.xml` and `dsnopent.xml` workflows|
     |`dsntivin`|The input property file used by the workflows|
 
-In addition, copy `db2provision.jar` in binary into your installation's DB2BASE/classes directory. This jar file is installed by default in the directory specified by the DDDEF created for SDSNACLS. 
+    Also, copy `db2provision.jar` in binary into your installation's DB2BASE/classes directory. This jar file is installed by default in the directory specified by the DDDEF created for SDSNACLS. 
+
+4. Update the files in the template for changes to subsystem parameters in the following APARs. For instructions, see the following readme files:
+    - [ph24358_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemNonDS/ph24358_readme.md)
+    - [ph26317_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemNonDS/ph26317_readme.md)
 
 ## Preparing the environment for the Db2 software service template
 
