@@ -1,12 +1,12 @@
 # Creating Db2 for z/OS data sharing group provisioning services
 
-With the Db2 data sharing software services template, you can create services that rapidly provision from scratch one or multiple Db2 data sharing groups, in IBM Cloud Provisioning and Management for z/OS. For information about cloud provisioning, including a description of the roles involved, see [Cloud provisioning services](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.1.0/com.ibm.zos.v2r1.izua700/izuprog_CloudProvisioning.htm#CloudProvisioningServices). 
+With the Db2 data sharing software services template, you can create services that rapidly provision from scratch one or multiple Db2 data sharing groups, in IBM Cloud Provisioning and Management for z/OS. For information about cloud provisioning, including a description of the roles involved, see [Cloud provisioning services](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.1.0/com.ibm.zos.v2r1.izua700/izuprog_CloudProvisioning.htm#CloudProvisioningServices).
 
-The sample Db2 data sharing software service template is built on top of z/OSMF cloud provisioning service infrastructure. For more information about how to load and use the service in z/OSMF, see [Software Services task overview](https://www.ibm.com/support/knowledgecenter/SSLTBW_2.3.0/com.ibm.zos.v2r3.izua300/IZUHPINFO_OverviewSoftwareServices.htm). 
+The sample Db2 data sharing software service template is built on top of z/OSMF cloud provisioning service infrastructure. For more information about how to load and use the service in z/OSMF, see [Software Services task overview](https://www.ibm.com/support/knowledgecenter/SSLTBW_2.3.0/com.ibm.zos.v2r3.izua300/IZUHPINFO_OverviewSoftwareServices.htm).
 
-The sample Db2 data sharing software service template uses a z/OSMF *composite template*, which uses a single workflow definition file that contains all steps required to run multiple sequences. It runs sequence 1 to  install the originating data sharing member and then repeats sequence 2 as necessary to install the specified number of additional data sharing members software instances to add to the cluster. 
+The sample Db2 data sharing software service template uses a z/OSMF *composite template*, which uses a single workflow definition file that contains all steps required to run multiple sequences. It runs sequence 1 to  install the originating data sharing member and then repeats sequence 2 as necessary to install the specified number of additional data sharing members software instances to add to the cluster.
 
-The sample Db2 data sharing software service template exploits the Network Resource Pool under the z/OSMF Cloud Provisioning Resource Management. For more information, see [Resource authorizations for the Configuration Assistant plug-in](https://www.ibm.com/support/knowledgecenter/SSLTBW_2.3.0/com.ibm.zos.v2r3.izua300/izuconfig_SecurityStructuresForZosmf.htm?view=kc#DefaultSecuritySetupForZosmf__SecuritySetupRequirementsForConfPlugin). For a tutorial that walks you through the steps that are needed, see [Getting Started Tutorial – Cloud.](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.tcp.ipsec.ipsec.help.doc/com/ibm/tcp/ipsec/cloud/GettingStartedWithCloud.html)  
+The sample Db2 data sharing software service template exploits the Network Resource Pool under the z/OSMF Cloud Provisioning Resource Management. For more information, see [Resource authorizations for the Configuration Assistant plug-in](https://www.ibm.com/support/knowledgecenter/SSLTBW_2.3.0/com.ibm.zos.v2r3.izua300/izuconfig_SecurityStructuresForZosmf.htm?view=kc#DefaultSecuritySetupForZosmf__SecuritySetupRequirementsForConfPlugin). For a tutorial that walks you through the steps that are needed, see [Getting Started Tutorial – Cloud.](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.tcp.ipsec.ipsec.help.doc/com/ibm/tcp/ipsec/cloud/GettingStartedWithCloud.html)
 
 This readme is intended for the service provider, who configures and makes the Db2 data sharing group provisioning service available to consumers in your shop.
 
@@ -20,38 +20,38 @@ You can use the sample Db2 software service template, to build your own Db2 soft
 * Images copies to DASD only.
 * The following work files:
     - For sort work, one 4K and one 32K work file, with PRIQTY 20MB and SEGSIZE 16
-	- For declared global temporary tables (DGTT), one 4K and one 32K workfile, with PRIQTY 20MB and SEGSIZE 16
-* The following default buffer pools for user data, with 5000 buffers for each: 
+    - For declared global temporary tables (DGTT), one 4K and one 32K workfile, with PRIQTY 20MB and SEGSIZE 16
+* The following default buffer pools for user data, with 5000 buffers for each:
     - BP1 for table spaces with 4 KB pages
     - BP8K1 for table spaces with 8 KB pages
     - BP16K1 for table spaces with 16 KB pages
     - BP32K1 for tables spaces with 32 KB pages
     - BP32K2 for LOB data
     - BP16K2 for XML data
-    - BP2 for indexes	
+    - BP2 for indexes
 * All Db2-supplied stored procedures installed and verified.
-* Optionally, the following features enabled and verified: 
+* Optionally, the following features enabled and verified:
     - Db2 REST services
-	- ODBC connectivity
-	- JDBC type-2 and type-4 connections
+    - ODBC connectivity
+    - JDBC type-2 and type-4 connections
 
-You can also use the sample Db2 software service template for actions against the provisioned data sharing group, and later to deprovision the provisioned Db2 data sharing groups. 
+You can also use the sample Db2 software service template for actions against the provisioned data sharing group, and later to deprovision the provisioned Db2 data sharing groups.
 
 ## Setting up the sample Db2 software service template
 
 The files of the service are stored in a directory in z/OS UNIX System Services (USS), and the directory and files must be accessible to z/OSMF. All required files are compressed into the `Db2ProvisionSystemDS.pax` file.
 
 1. Download the `Db2ProvisionSystemDS.pax` file.
-2. Use FTP in binary mode to upload the `Db2ProvisionSystemDS.pax` file to the directory where you want to store the service in USS. The maximum length for the directory name is 40 characters. 
-3. Extract the file into the directory of your choice, for example: 
-    
+2. Use FTP in binary mode to upload the `Db2ProvisionSystemDS.pax` file to the directory where you want to store the service in USS. The maximum length for the directory name is 40 characters.
+3. Extract the file into the directory of your choice, for example:
+
     ```
     pax -rvf Db2ProvisionSystemDS.pax
     ```
 
     Inside the directory that you specified, the extracted directory `<service-base-dir>` has the following structure:
 
-    |File|Description| 
+    |File|Description|
     |----|-----------|
     |`dsntiwpc.xml`, `dsnopent.xml`| Workflows to provision a Db2 data sharing group and enable optional features (Db2 REST services, ODBC, JDBC)|
     |`actions.xml`|A workflow for actions of the service|
@@ -70,11 +70,12 @@ The files of the service are stored in a directory in z/OS UNIX System Services 
     |`dsntx*`|Several JCL templates used by `dsndeprc.xml` workflow, specific to additional members|
 
 
-    Also, copy `db2provision.jar` in binary into your installation's DB2BASE/classes directory. This jar file is installed by default in the directory specified by the DDDEF created for SDSNACLS. 
+    Also, copy `db2provision.jar` in binary into your installation's DB2BASE/classes directory. This jar file is installed by default in the directory specified by the DDDEF created for SDSNACLS.
 
 4. Update the files in the template for changes to subsystem parameters in the following APARs. For instructions, see the following readme files:
     - [ph24358_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemDS/ph24358_readme.md)
     - [ph26317_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemDS/ph26317_readme.md)
+    - [ph21341_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemDS/ph21341_readme.md)
 
 
 ## Preparing the environment for the Db2 software service template
@@ -89,16 +90,16 @@ Before building your own template based on the sample, verify with the following
 
 
 ### System programmer tasks
-* Provide the SMP/E Db2 product target libraries, with the the following Db2 12 APARs applied: PH09857; and if Db2 REST services will be enabled on the provisioned Db2 subsystems, APARs PI70652 and PI96649.  
+* Provide the SMP/E Db2 product target libraries, with the the following Db2 12 APARs applied: PH09857; and if Db2 REST services will be enabled on the provisioned Db2 subsystems, APARs PI70652 and PI96649.
 * Certify that the SMP/E Db2 product target libraries for SDSNEXIT, SDSNLINK, SDSNLOAD, SDSNLOD2 and IRLM RESLIB are APF-authorized <br>**Note:** SDSNLOD2 is a PDSE data set, which contains JDBC and SQLJ DLLs. Although DB2 does not require that SDSNLOD2 be APF-authorized, be aware that if this data set is in a STEPLIB data set concatenation of an address space that does need APF authorization, SDSNLOD2 must also be APF-authorized. The provisioning template concatenates SDSNLOD2 when verifying JDBC local connection (Type-2) in Optional Features.
-* Provide data set names, including for host languages (see `Section 7: Host language data sets`, in the `dsntivin` and `dsntivia` files.) 
-* Verify installation, and provide directories where indicated, for the following installed FMIDs: 
-    - **JDBCC12** for Db2 JDBC/SQLJ. All variables must be set in `Section 6: Db2 Java properties`,  in the `dstnivin` file. 
+* Provide data set names, including for host languages (see `Section 7: Host language data sets`, in the `dsntivin` and `dsntivia` files.)
+* Verify installation, and provide directories where indicated, for the following installed FMIDs:
+    - **JDBCC12** for Db2 JDBC/SQLJ. All variables must be set in `Section 6: Db2 Java properties`,  in the `dstnivin` file.
     - **JDBCC17** for Db2 ODBC. The following variables must be set in `Section 7: Host language data sets`,  in the `dstnivin` file: CCOMP, CPPAUTCL, LELKED, LEPLMSGL, and LERUN.
     - **HDDA211** for z/OS Application Connectivity.
     - **HDBCC1K** for Db2 Utilities Suite for z/OS.
 * Define sufficient coupling facility (CF) structures for all possible provisioned data sharing group instances, following the [naming conventions](#naming-conventions) and the sizing for a medium configuration, as described in [Coupling facility structure size allocation](https://www.ibm.com/support/knowledgecenter/SSEPEK_12.0.0/inst/src/tpc/db2z_cfstructuresizeallocation.html).
-    
+
 ### Network administrator tasks
 * Provide a range of DVIPAs and TCP/IP ports to be used under the Network Resource Pool (NRP).
 
@@ -125,23 +126,23 @@ Before building your own template based on the sample, verify with the following
 |SECURITY ADMIN 2  |`SECADMN2`||
 |PACKAGE OWNER     | `RTM05PKO`|The ID to own the package for the Db2-supplied SYSPROC.DSNAHVPM stored procedure.|
 
-* Define RACF STARTED class profiles to all potential provisioned Db2 subsystem instances associating an ID to be used by each Db2 address space. 
-* Define RACF DSNR class profiles to control access to any provisioned Db2 subsystem from another environment, such as CICS, IMS, TSO, RRS, BATCH, DDF and REST services.  
+* Define RACF STARTED class profiles to all potential provisioned Db2 subsystem instances associating an ID to be used by each Db2 address space.
+* Define RACF DSNR class profiles to control access to any provisioned Db2 subsystem from another environment, such as CICS, IMS, TSO, RRS, BATCH, DDF and REST services.
 * Define RACF SERVER class profiles to control access to any provisioned Db2 subsystem because they will use stored procedures in a WLM-established address space.
 
 
 ### Storage adminstrator tasks
 * Define SMS constructs, such as SMS classes and storage groups, for Db2 provisioning. The SMS storage groups can be per instance or shared by all potential provisioned Db2 instances.<br>The storage administrator can decide if image copy data sets and archive log data sets are to share the SMS storage groups with other Db2 data sets.
-* Together with the security administrator, provide access authorization to all prefixes in the following table to the Db2 IDs, including the ID that executes the steps of the Db2 provisioning workflow. 
-* Define ACS routines to be used to determine the SMS classes and storage groups for data sets allocation during a Db2 subsystem provisioning. 
-* Define USERCATs and ALIASes, associating them to their specific SMS storage group.<br> **Important:** The provisioning process determines the  `groupname` value. You must do the definition work for all potential instances. If you are allowing 2 instances of a data sharing group, then you must have 2 sets of definitions below, corresponding to the 2 `groupname(s)` that can be generated. For example: DSNZ0SYS, DSNZ1SYS, an so on. 
+* Together with the security administrator, provide access authorization to all prefixes in the following table to the Db2 IDs, including the ID that executes the steps of the Db2 provisioning workflow.
+* Define ACS routines to be used to determine the SMS classes and storage groups for data sets allocation during a Db2 subsystem provisioning.
+* Define USERCATs and ALIASes, associating them to their specific SMS storage group.<br> **Important:** The provisioning process determines the  `groupname` value. You must do the definition work for all potential instances. If you are allowing 2 instances of a data sharing group, then you must have 2 sets of definitions below, corresponding to the 2 `groupname(s)` that can be generated. For example: DSNZ0SYS, DSNZ1SYS, an so on.
 
 |Aliases(prefixes)|to be used for|
 |----|----|
-|a) `groupnameSYS` |Db2 catalog, directory, and IVP data sets| 
-|b) `groupnameLOG` |Db2 BSDS, active logs, and archive logs data sets| 
-|c) `groupnameUSR` |Db2 User data| 
-|d) `groupnameCP1` |Db2 Image Copy data sets| 
+|a) `groupnameSYS` |Db2 catalog, directory, and IVP data sets|
+|b) `groupnameLOG` |Db2 BSDS, active logs, and archive logs data sets|
+|c) `groupnameUSR` |Db2 User data|
+|d) `groupnameCP1` |Db2 Image Copy data sets|
 |e) `groupname` |Aliases for the SMP/E libraries and Db2 non-SMP/E data sets.<sup>*(1)*</sup>|
 
 *(1)* The `groupname` here precedes the following names:
@@ -154,7 +155,7 @@ The template uses the following naming conventions The naming conventions are ve
 
 In the table following characters have these meanings:
 - `c`= Cluster instance name prefix
-- `n`= cluster instance number – 0-n 
+- `n`= cluster instance number – 0-n
 - `m`= SW instance number – 0-m
 
 |Named item            |Format   |Example (originating)|Example (additional)
@@ -163,15 +164,15 @@ In the table following characters have these meanings:
 |Group attach name     |`DcnG`    |DZ0G               |DZ1G
 |Subsystem name & member name |`Dcnm` |DZ00, DZ01     |DZ10, DZ11
 |IRLM SS name          |`Icnm`    |IZ00, IZ01         |IZ10, IZ11
-|IRLM XES Group name   |`DXRcn`   |DXRZ0              |DXRZ1      
+|IRLM XES Group name   |`DXRcn`   |DXRZ0              |DXRZ1
 |Subsystem load module |`DcnmZPRM`|DZ00ZPRM, DZ01ZPRM |DZ10ZPRM, DZ11ZPRM
 |Subsystem DECP        |`DcnGDECP`|DZ0GDECP           |DZ1GDECP
-|Location              |`DSNcn`   |DSNZ0              |DSNZ1 
-|IPname                |`DSNcn`   |DSNZ0              |DSNZ1 
+|Location              |`DSNcn`   |DSNZ0              |DSNZ1
+|IPname                |`DSNcn`   |DSNZ0              |DSNZ1
 |**Start up procedures**|See the following five rows|
-|-ssnmMSTR|`DcnmMSTR`|DZ00MSTR, DZ01MSTR |DZ10MSTR, DZ11MSTR  
+|-ssnmMSTR|`DcnmMSTR`|DZ00MSTR, DZ01MSTR |DZ10MSTR, DZ11MSTR
 |-ssnmDBM1|`DcnmDBM1`|DZ00DBM1, DZ01DBM1 |DZ10DBM1, DZ11DBM1
-|-ssnmDIST|`DcnmDIST`|DZ00DIST, DZ01DIST |DZ10DIST, DZ11DIST  
+|-ssnmDIST|`DcnmDIST`|DZ00DIST, DZ01DIST |DZ10DIST, DZ11DIST
 |-ssnmIRLM|`DcnmIRLM`|DZ00IRLM, DZ01IRLM |DZ10IRLM, DZ11IRLM
 |-groupattachWLM*|`DcnGWLM*`|DZ0GWLM*           |DZ1GWLM*
 |**WLMENV Db2 supplied SPs**|See the following row|
@@ -181,12 +182,12 @@ In the table following characters have these meanings:
 |-groupname_SCA        |`DSNcn_SCA`  |DSNZ0_SCA            |DSNZ1_SCA
 |-groupname_GBPxx       |`DSNcn_GBPxx`  |DSNZ0_GBPx <br/>(GBP0, GBP1, GBP2, <br/>GBP8K0, GBP8K1, <br/>GBP16K0, GBP16K1, GBP16K2, <br/>GBP32K, GBP32K1, GBP32K2)  |DSNZ1_GBPx
 |Catalog & Directory   |`DSNcnSYS`|DSNZ0SYS.* |DSNZ1SYS.*
-|BSDS              |`DSNcnLOG.Dcnm.BSDS01`|DSNZ0LOG.DZ00.BSDS01/BSDS02<br/>DSNZ0LOG.DZ01.BSDS01/BSDS02	|DSNZ1LOG.DZ10.BSDS01/BSDS02<br/>DSNZ1LOG.DZ11.BSDS01/BSDS02
+|BSDS              |`DSNcnLOG.Dcnm.BSDS01`|DSNZ0LOG.DZ00.BSDS01/BSDS02<br/>DSNZ0LOG.DZ01.BSDS01/BSDS02  |DSNZ1LOG.DZ10.BSDS01/BSDS02<br/>DSNZ1LOG.DZ11.BSDS01/BSDS02
 |Active Logs       |`DSNcnLOG.Dcnm.LOGCOPY1.DS01`|DSNZ0LOG.DZ00.LOGCOPY1.DS01/DS02/DS03<br/>DSNZ0LOG.DZ00.LOGCOPY2.DS01/DS02/DS03<br/>DSNZ0LOG.DZ01.LOGCOPY1.DS01/DS02/DS03<br/>DSNZ0LOG.DZ01.LOGCOPY2.DS01/DS02/DS03|DSNZ1LOG.DZ10.LOGCOPY1.DS01/DS02/DS03<br/>DSNZ1LOG.DZ10.LOGCOPY2.DS01/DS02/DS03<br/>DSNZ1LOG.DZ11.LOGCOPY1.DS01/DS02/DS03<br/>DSNZ1LOG.DZ11.LOGCOPY2.DS01/DS02/DS03
-|Archive Logs      |`DSNcnLOG.Dcnm.ARCH1.Dyyddd.Thhmmsst.Axxxxxxx`|DSNZ0LOG.DZ00.ARCH1.Dyyddd.Thhmmsst.Axxxxxxx<br/>DSNZ0LOG.DZ00.ARCH2.Dyyddd.Thhmmsst.Axxxxxxx<br/>DSNZ0LOG.DZ01.ARCH1.Dyyddd.Thhmmsst.Axxxxxxx<br/>DSNZ0LOG.DZ01.ARCH2.Dyyddd.Thhmmsst.Axxxxxxx|DSNZ1LOG.DZ10.ARCH1.Dyyddd.Thhmmsst.Axxxxxxx<br/>DSNZ1LOG.DZ10.ARCH2.Dyyddd.Thhmmsst.Axxxxxxx<br/>DSNZ1LOG.DZ11.ARCH1.Dyyddd.Thhmmsst.Axxxxxxx<br/>DSNZ1LOG.DZ11.ARCH2.Dyyddd.Thhmmsst.Axxxxxxx  
-|Image Copy  |`DSNcnCP1.&DB..&SN..&IC.&JU..&UQ.`|DSNZ0CP1.&DB..&SN..&IC.&JU..&UQ.|DSNZ1CP1.&DB..&SN..&IC.&JU..8UQ. 
+|Archive Logs      |`DSNcnLOG.Dcnm.ARCH1.Dyyddd.Thhmmsst.Axxxxxxx`|DSNZ0LOG.DZ00.ARCH1.Dyyddd.Thhmmsst.Axxxxxxx<br/>DSNZ0LOG.DZ00.ARCH2.Dyyddd.Thhmmsst.Axxxxxxx<br/>DSNZ0LOG.DZ01.ARCH1.Dyyddd.Thhmmsst.Axxxxxxx<br/>DSNZ0LOG.DZ01.ARCH2.Dyyddd.Thhmmsst.Axxxxxxx|DSNZ1LOG.DZ10.ARCH1.Dyyddd.Thhmmsst.Axxxxxxx<br/>DSNZ1LOG.DZ10.ARCH2.Dyyddd.Thhmmsst.Axxxxxxx<br/>DSNZ1LOG.DZ11.ARCH1.Dyyddd.Thhmmsst.Axxxxxxx<br/>DSNZ1LOG.DZ11.ARCH2.Dyyddd.Thhmmsst.Axxxxxxx
+|Image Copy  |`DSNcnCP1.&DB..&SN..&IC.&JU..&UQ.`|DSNZ0CP1.&DB..&SN..&IC.&JU..&UQ.|DSNZ1CP1.&DB..&SN..&IC.&JU..8UQ.
 |Flash Copy  |`DSNcnCP1.&DB..&SN..N&DSNUM..&UQ.`|DSNZ0CP1.&DB..&SN..N&DSNUM..&UQ.|DSNZ1CP1.&DB..&SN..N&DSNUM..&UQ.
-|non-VSAM data sets and Db2 SMP/E TLIBs aliases |	`DSNcn.Dcnm.*`|	DSNZ0.DZ00.*, DSNZ0.DZ01.* |DSNZ1.DZ10.*, DSNZ1.DZ11.*
+|non-VSAM data sets and Db2 SMP/E TLIBs aliases |   `DSNcn.Dcnm.*`| DSNZ0.DZ00.*, DSNZ0.DZ01.* |DSNZ1.DZ10.*, DSNZ1.DZ11.*
 |User data  |`DSNcnUSR` |DSNZ0USR.* |DSNZ1USR.*
 |Java runtime options  |`DSNcn.DcnGWLMJ.JAVAENV`|DSNZ0.DZ0GWLMJ.JAVAENV|DSNZ1.DZ1GWLMJ.JAVAENV
 |Java environment files  |`dcngenvfile.txt` and `dcngjvmsp`|dz0genvfile.txt and  dz0gjvmsp|dz1genvfile.txt and  dz1gjvmsp|
@@ -197,25 +198,25 @@ In the table following characters have these meanings:
 
 The `dsntivin` and `dsntivia` input variable files define and describe many input properties that define the Db2 data sharing group and its members. At provisioning time, values are set for many of these variables based on the data sharing group and Db2 data sharing instance names being provisioned. The remaining variables are defined with default values from the sample template. Review these values carefully before you publish the template.
 
-If you are using the sample artifacts before building your own template, you must edit the `dsntivin` and `dsntivia` input variable files, and update them according to your installation as follows:  
+If you are using the sample artifacts before building your own template, you must edit the `dsntivin` and `dsntivia` input variable files, and update them according to your installation as follows:
 
 1. In `Section 1: Variables to support provisioning instantiation`, you do not need to change anything, unless you want to use a COMMAND PREFIX (AGSSIDPX) to use other character than `–` (hyphen)
 
-2. In The following sections, no changes are required. The sample template is built on top of Db2 12 function level 504. 
+2. In The following sections, no changes are required. The sample template is built on top of Db2 12 function level 504.
   * `Section 2: Db2 function level`
-  * `Section 3: Db2 install data sets prefix/HLQ` 
+  * `Section 3: Db2 install data sets prefix/HLQ`
 
-3. You must update the values in each of the following sections for your environment in: 
+3. You must update the values in each of the following sections for your environment in:
 
-  * `Section 4: Db2 authorization IDs` 
-  * `Section 5: Db2 product SMP/E target libraries` 
-  * `Section 6: Db2 Java properties` 
-  * `Section 7: Host language data sets`  
-  * `Section 8: Other data sets` 
+  * `Section 4: Db2 authorization IDs`
+  * `Section 5: Db2 product SMP/E target libraries`
+  * `Section 6: Db2 Java properties`
+  * `Section 7: Host language data sets`
+  * `Section 8: Other data sets`
 
-4. In `Section 9: Variables whose values will be generated at provisioning time`, do not change anything. The values of the variables in this section are built at provisioning time according to the data sharing group name ('groupname') and subsystem instance (`ssid`) being provisioned, and the [naming convention](#naming-conventions) rules for provisioning. 
+4. In `Section 9: Variables whose values will be generated at provisioning time`, do not change anything. The values of the variables in this section are built at provisioning time according to the data sharing group name ('groupname') and subsystem instance (`ssid`) being provisioned, and the [naming convention](#naming-conventions) rules for provisioning.
 
-5. In `Section 10: Variables with default values for provisioning a typical Db2 configuration`, you do not need to change any of these variables if you want the recommended configuration. The following table lists variables that use different default values than are used by the Db2 installation CLIST. 
+5. In `Section 10: Variables with default values for provisioning a typical Db2 configuration`, you do not need to change any of these variables if you want the recommended configuration. The following table lists variables that use different default values than are used by the Db2 installation CLIST.
 
 |Variable name (parameter name if different) |Db2 CLIST default|Template default|
 |----|----|----|
@@ -271,48 +272,48 @@ If you are using the sample artifacts before building your own template, you mus
 |`UTOC` (`UTILITY_OBJECT_CONVERSION`)|`NONE`|`EXTENDED`|
 |`WFDBSEP`|`NO`|`YES`|
 
-After your input properties file is updated with your installation values, you can create your own template under the z/OSMF Cloud Provisioning Software Services. 
+After your input properties file is updated with your installation values, you can create your own template under the z/OSMF Cloud Provisioning Software Services.
 
 ## Preparing and publishing the Db2 data sharing software service template
 
 For general instructions adding standard templates in z/OSMF Cloud Provisioning Software Services, see [Prepare and publish a template](https://www.ibm.com/support/knowledgecenter/SSLTBW_2.3.0/com.ibm.zosmfcore.softwareconfig.help.doc/izuSChpHowToProvisionSP.html) and [Add a template and resource pool](https://www.ibm.com/support/knowledgecenter/SSLTBW_2.3.0/com.ibm.zos.v2r3.izsc300/izuRPhpAddTemplateandResourcePool.htm)
 
-1. Add a standard template for the originating Db2 data sharing member, and specify the following file names, where `<service-base-dir>` is the directory where you unpaxed the `Db2ProvisionSystemDS.pax` file: 
-     - For the workflow file, specify: `<service-base-dir>/dsntiwpc.xml` 
+1. Add a standard template for the originating Db2 data sharing member, and specify the following file names, where `<service-base-dir>` is the directory where you unpaxed the `Db2ProvisionSystemDS.pax` file:
+     - For the workflow file, specify: `<service-base-dir>/dsntiwpc.xml`
      - For the actions file, specify: `<service-base-dir>/actions.xml`
-     - For the workflow variable input file, specify: `<service-base-dir>/dsntivin` 
+     - For the workflow variable input file, specify: `<service-base-dir>/dsntivin`
 
-2. Add a standard template for adding Db2 data sharing members, and specify the following file names, where `<service-base-dir>` is the directory where you unpaxed the `Db2ProvisionSystemDS.pax` file: 
-     - For the workflow file, specify: `<service-base-dir>/dsntiwpc.xml` 
+2. Add a standard template for adding Db2 data sharing members, and specify the following file names, where `<service-base-dir>` is the directory where you unpaxed the `Db2ProvisionSystemDS.pax` file:
+     - For the workflow file, specify: `<service-base-dir>/dsntiwpc.xml`
      - For the actions file, specify: `<service-base-dir>/actions.xml`
-     - For the workflow variable input file, specify: `<service-base-dir>/dsntivia` 
+     - For the workflow variable input file, specify: `<service-base-dir>/dsntivia`
 
 3. Approve and publish the templates for the orignating and additional members.
 
-4. Add a composite template for the data sharing group. 
-    
+4. Add a composite template for the data sharing group.
+
     a. Add the **originating member** Published Template and specify 1 clustered instances to create from this template
 
     b. Add the **adding member** Published Template and specify `n` clustered instances, where `n` is the number of additional members to add to the data sharing group. <br/>When adding the **adding member** template, you are prompted to a set of variables. Do the following:
-    
+
     - In the Variables table, select variable `AGFMRIN`, and select the **originating member** template as the **Source Template**. Then click **Add** to add `AGFMRIN` as a connector variable.
-    - In the Connector Variables table select `registry-instance-name` as **Source Variable Name** for `AGFMRIN`. 
+    - In the Connector Variables table select `registry-instance-name` as **Source Variable Name** for `AGFMRIN`.
 
 5. Associate the template with a tenant. When you associate the tenant, specify two leading characters where subsystem name prefix must be D, and the cluster instance name prefix is any character of your choice.
-     
-6. Use the network configuration assistant to specify the DVIPA and port ranges to use for the provisioned Db2 data sharing groups and members.      
+
+6. Use the network configuration assistant to specify the DVIPA and port ranges to use for the provisioned Db2 data sharing groups and members.
 7. Test the provisioning template and verify the provisioned Db2 data sharing groups, including the available actions, deprovisioning, and re-provisioning.
-    
-8. Publish the template to make it available to consumers. 
-    
+
+8. Publish the template to make it available to consumers.
+
 ### Steps in the provisioning workflow (`dsntiwpc.xml`)
 
 The following table indicates the steps that are excuted by the provisioning workflow for the originating member and for additional members of the data sharing group.
 
-|Originating member| Additional members | Action 
+|Originating member| Additional members | Action
 |----              |----                |----
 |No                |Yes                 |Obtain registryID of a DSG originating member (REST API)
-|No	               |Yes                 |Update IRLMISEQ in registry of DSG originating member (REST API and inline shell-JCL)
+|No                |Yes                 |Update IRLMISEQ in registry of DSG originating member (REST API and inline shell-JCL)
 |Yes               |Yes                 |Instantiate and validate Db2 SSID (DSNTRSSN)
 |Yes               |Yes                 |Set variables for provisioning (Instructions only - setVariable)
 |Yes               |Yes                 |Acquire Db2 DVIPAs and ports from Network Resource Pool - NRP
@@ -324,17 +325,17 @@ The following table indicates the steps that are excuted by the provisioning wor
 |No                |Yes                 |Execute all mandatory steps to install additional Db2 data sharing members
 |Yes              |Yes                  |Perform enablement of the optional features (REST services, ODBC, JDBC). Each optional feature can be invoked only one time in a data sharing group.
 
-    
-### Actions for the provisioned Db2 subsystems 
+
+### Actions for the provisioned Db2 subsystems
 
 The following actions are available from z/OSMF Cloud Provisioning Software Services for the provisioned Db2 data sharing group:
 
 #### At the Db2 subsystem (Db2 data sharing member level):
-   * START DB2 - Start the Db2 subsystem, including the SETSSI ADD command in an IPL)  
+   * START DB2 - Start the Db2 subsystem, including the SETSSI ADD command in an IPL)
    * STOP DB2 - normal stop of the Db2 system
    * DISPLAY DDF - display DDF information to the UI
    * DISPLAY GROUP - display data sharing group information to the UI
-   * Enable optional features - (ODBC, JDBC, and REST services) 
+   * Enable optional features - (ODBC, JDBC, and REST services)
 
 
 #### At the cluster intance level (Db2 data sharing group level):
@@ -343,10 +344,10 @@ The following actions are available from z/OSMF Cloud Provisioning Software Serv
 
 ### Steps in the deprovision workflow (`dsndeprc.xml`)
 
-The deprovision workflow removes all definitions and data sets related to the deprovisioned Db2 data sharing group. To deprovision a data sharing group, the sample template completes the following high-level actions: 
+The deprovision workflow removes all definitions and data sets related to the deprovisioned Db2 data sharing group. To deprovision a data sharing group, the sample template completes the following high-level actions:
 
 |Additional members|Originating member|Action
-|----              |----              |---- 
+|----              |----              |----
 |Yes               |Yes               |Stop Db2 system (DSNTIJSC)
 |Yes               |Yes               |Release Db2 DVIPAs and ports back to Network Resource Pool – NRP (Rest)
 |No                |Yes               |Delete IVP and non-VSAM install data sets (DSNTDJ1)
@@ -363,86 +364,86 @@ The deprovision workflow removes all definitions and data sets related to the de
 |Yes               |Yes               |Delete Db2 and IRLM subsystem definitions from z/OS (DSNTDJMD)
 |No                |Yes               |Release all Db2 CF resources (DSNTDJCF)
 
-    
+
 ## Security considerations for the sample Db2 software service template
 
-The “workflow executor” of the provisioning service must have RACF authority to execute the service, and must also have the following authority: 
-* Authority to allocate data sets with the aliases (HLQ) assigned to that Db2 instance, as well as USS files 
-* Read/write authority for the system PROCLIB and WLM application environment definition  
-* Authority to generate RACF PassTickets to others executing steps where a password would be required  
+The “workflow executor” of the provisioning service must have RACF authority to execute the service, and must also have the following authority:
+* Authority to allocate data sets with the aliases (HLQ) assigned to that Db2 instance, as well as USS files
+* Read/write authority for the system PROCLIB and WLM application environment definition
+* Authority to generate RACF PassTickets to others executing steps where a password would be required
 
-Db2 itself requires specific authorities when executing some of the installation and provisioning steps, and some workflow steps are executed under user IDs other than the workflow executor, by using the runAsUser ID. For details, see the tables in [Authorizations for workflows](#authorizations-for-workflows). 
+Db2 itself requires specific authorities when executing some of the installation and provisioning steps, and some workflow steps are executed under user IDs other than the workflow executor, by using the runAsUser ID. For details, see the tables in [Authorizations for workflows](#authorizations-for-workflows).
 
-Also, the enablement steps for the optional features have special requirements.   
+Also, the enablement steps for the optional features have special requirements.
 
 ### Using RACF PassTickets for optional features
-The JDBC enablement optional feature requires connection to the provisioned Db2 subsystem to perform the BIND for the JDBC packages as well as to verify a remote connection (JCC-Type-4). 
+The JDBC enablement optional feature requires connection to the provisioned Db2 subsystem to perform the BIND for the JDBC packages as well as to verify a remote connection (JCC-Type-4).
 
-When connecting, a user ID and password must be passed to the connection statement. Instead of sending clear text passwords, the sample template uses generated RACF PassTickets.  Users of the application can then use the PassTickets to authenticate within a RACF-secured network. This procedure prevents the need to store password credentials within the z/OSMF environment. 
+When connecting, a user ID and password must be passed to the connection statement. Instead of sending clear text passwords, the sample template uses generated RACF PassTickets.  Users of the application can then use the PassTickets to authenticate within a RACF-secured network. This procedure prevents the need to store password credentials within the z/OSMF environment.
 
-You must certify that the ID used to execute the workflows has the RACF authority to generate PassTickets to others. 
+You must certify that the ID used to execute the workflows has the RACF authority to generate PassTickets to others.
 
-To enable the usage of RACF PassTicket by the sample template, take the following actions: 
+To enable the usage of RACF PassTicket by the sample template, take the following actions:
 
-1. Activate the RACF PassTicket class, by issuing the following commands: 
+1. Activate the RACF PassTicket class, by issuing the following commands:
 ```
 SETROPTS CLASSACT(PTKTDATA) RACLIST(PTKTDATA) SETROPTS GENERIC(PTKTDATA)
 ```
 
 2. Define RACF profiles for the application in PTKTDATA, by issuing the following commands:
 ```
-RDEFINE PTKTDATA <applName> SSIGNON(KEYMASKED(<key>)) 
+RDEFINE PTKTDATA <applName> SSIGNON(KEYMASKED(<key>))
 APPLDATA('NO REPLAY PROTECTION')
 ```
-In the preceding example: 
-`<applName>` is the name of the application that requests and uses the PassTickets. Provisioned Db2 subsystems accept TCP/IP connections only, therefore we should use the value of the the IPNAME as  `<applName>`.  
+In the preceding example:
+`<applName>` is the name of the application that requests and uses the PassTickets. Provisioned Db2 subsystems accept TCP/IP connections only, therefore we should use the value of the the IPNAME as  `<applName>`.
 
 
-`<key>` is a session key with the value of 16 hexadecimal digits (for an 8-byte or 64-bit key). The session key must be identical to the key in the PassTicket definition in each RACF instance. The key for each application must be the same on all subsystems in the configuration. 
+`<key>` is a session key with the value of 16 hexadecimal digits (for an 8-byte or 64-bit key). The session key must be identical to the key in the PassTicket definition in each RACF instance. The key for each application must be the same on all subsystems in the configuration.
 
 
-`APPLDATA('NO REPLAY PROTECTION')` is the option that you can use to permit reuse of the same PassTicket multiple times. 
+`APPLDATA('NO REPLAY PROTECTION')` is the option that you can use to permit reuse of the same PassTicket multiple times.
 
 The following example shows these commands for provisioning two Db2 data sharing groups, each with two-way data sharing. As described in the [Naming Convention](#naming-convention) section, the group name of the data sharing group being provisioned is used for the IPNAME value. Because we expect two data sharing group instances to be provisioned with two members each, you can activate them all in one single job, considering that they will be all under the same RACF database.
 
 ```
-//STEP01 EXEC PGM=IKJEFT01                                                     
-//SYSTSPRT DD SYSOUT=*                                                         
-//SYSTSIN DD *                                                                 
-  RDEL PTKTDATA (DSNZ1)                                                        
-  RDEL PTKTDATA (DSNZ0)                                                        
-  RDEL PTKTDATA (DZ00)                                                         
-  RDEL PTKTDATA (DZ01)                                                         
-  RDEL PTKTDATA (DZ10)                                                         
-  RDEL PTKTDATA (DZ11)                                                         
-  RDEL PTKTDATA (IRRPTAUTH.DZ*.*)                                              
-RDEF PTKTDATA DSNZ0 -                                          
- SSIGNON(KEYMASKED(E001193519561977)) -                        
- UACC(NONE) APPLDATA('NO REPLAY PROTECTION')                   
-RDEF PTKTDATA DSNZ1 -                                          
- SSIGNON(KEYMASKED(E001193519561977)) -                        
- UACC(NONE) APPLDATA('NO REPLAY PROTECTION')                   
-RDEF PTKTDATA DZ00 -                                           
- SSIGNON(KEYMASKED(E001193519561977)) -                        
- UACC(NONE) APPLDATA('NO REPLAY PROTECTION')                   
-RDEF PTKTDATA DZ01 -                                           
- SSIGNON(KEYMASKED(E001193519561977)) -                        
- UACC(NONE) APPLDATA('NO REPLAY PROTECTION')                   
-RDEF PTKTDATA DZ10 -                                           
- SSIGNON(KEYMASKED(E001193519561977)) -                        
- UACC(NONE) APPLDATA('NO REPLAY PROTECTION')                   
-RDEF PTKTDATA DZ11 -                                           
- SSIGNON(KEYMASKED(E001193519561977)) -                        
- UACC(NONE) APPLDATA('NO REPLAY PROTECTION')                   
-RDEFINE PTKTDATA IRRPTAUTH.DZ*.*                               
-PERMIT IRRPTAUTH.DZ*.* CLASS(PTKTDATA) ID(WFexecutorID) ACCESS(UPDATE)     
-SETROPTS RACLIST(PTKTDATA) REFRESH                                  
-RDEFINE PTKTDATA IRRPTAUTH.DSNZ*.*                                  
-PERMIT IRRPTAUTH.DSNZ*.* CLASS(PTKTDATA) ID(WFexecutorID) ACCESS(UPDATE)   
-SETROPTS RACLIST(PTKTDATA) REFRESH                                    
+//STEP01 EXEC PGM=IKJEFT01
+//SYSTSPRT DD SYSOUT=*
+//SYSTSIN DD *
+  RDEL PTKTDATA (DSNZ1)
+  RDEL PTKTDATA (DSNZ0)
+  RDEL PTKTDATA (DZ00)
+  RDEL PTKTDATA (DZ01)
+  RDEL PTKTDATA (DZ10)
+  RDEL PTKTDATA (DZ11)
+  RDEL PTKTDATA (IRRPTAUTH.DZ*.*)
+RDEF PTKTDATA DSNZ0 -
+ SSIGNON(KEYMASKED(E001193519561977)) -
+ UACC(NONE) APPLDATA('NO REPLAY PROTECTION')
+RDEF PTKTDATA DSNZ1 -
+ SSIGNON(KEYMASKED(E001193519561977)) -
+ UACC(NONE) APPLDATA('NO REPLAY PROTECTION')
+RDEF PTKTDATA DZ00 -
+ SSIGNON(KEYMASKED(E001193519561977)) -
+ UACC(NONE) APPLDATA('NO REPLAY PROTECTION')
+RDEF PTKTDATA DZ01 -
+ SSIGNON(KEYMASKED(E001193519561977)) -
+ UACC(NONE) APPLDATA('NO REPLAY PROTECTION')
+RDEF PTKTDATA DZ10 -
+ SSIGNON(KEYMASKED(E001193519561977)) -
+ UACC(NONE) APPLDATA('NO REPLAY PROTECTION')
+RDEF PTKTDATA DZ11 -
+ SSIGNON(KEYMASKED(E001193519561977)) -
+ UACC(NONE) APPLDATA('NO REPLAY PROTECTION')
+RDEFINE PTKTDATA IRRPTAUTH.DZ*.*
+PERMIT IRRPTAUTH.DZ*.* CLASS(PTKTDATA) ID(WFexecutorID) ACCESS(UPDATE)
+SETROPTS RACLIST(PTKTDATA) REFRESH
+RDEFINE PTKTDATA IRRPTAUTH.DSNZ*.*
+PERMIT IRRPTAUTH.DSNZ*.* CLASS(PTKTDATA) ID(WFexecutorID) ACCESS(UPDATE)
+SETROPTS RACLIST(PTKTDATA) REFRESH
 ```
 ### Authorizations for the sample Db2 software service template workflows
-The following tables show the authorizations required for certain steps of the sample template. All other steps run under the authorization ID that executes the workflow. You can specify the authorization ID that executes the workflow in the AGEXECID variable in section 4 of the `dsntivin` and `dsntivia` input variable files. If the AGEXECID value is blank, the sign-on ID executes the steps.    
+The following tables show the authorizations required for certain steps of the sample template. All other steps run under the authorization ID that executes the workflow. You can specify the authorization ID that executes the workflow in the AGEXECID variable in section 4 of the `dsntivin` and `dsntivia` input variable files. If the AGEXECID value is blank, the sign-on ID executes the steps.
 
 #### Authorizations for the provisioning workflow (`dsntiwpc.xml`)
 
