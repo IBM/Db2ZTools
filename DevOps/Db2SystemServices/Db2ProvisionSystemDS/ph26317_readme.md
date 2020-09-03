@@ -2,18 +2,18 @@
 
  This PTF for APAR PH26317 removes two existing Db2 subsystem parameters, OBJECT_CREATE_FORMAT and UTILITY_OBJECT_CONVERSION from Db2-supplied z/OSMF variable input and workflow definition files.  You must update the extracted zFS files from the `Db2ProvisionSystemDS.pax` file, as described below:
 
-## Update Job dsntijuz:
+## Update Job `dsntijuz`:
 
  (a) Locate and remove these 2 lines:
 
     #formatLine("               OBJECT_CREATE_FORMAT=${OBCF},",
-                    71,15,false,"X")                                     
+                71,15,false,"X")
 
 
 (b) Locate and remove these 2 lines:
 
     #formatLine("               UTILITY_OBJECT_CONVERSION=${UTOC},", 
-                71,15,false,"X") 
+                71,15,false,"X")
 
 ## Update the z/OSMF variable input files `dsntivin` and `dsntivia`: 
 
