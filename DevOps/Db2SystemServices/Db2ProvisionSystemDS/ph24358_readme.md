@@ -56,7 +56,9 @@ The PTF for APAR PH24358 removes two existing Db2 subsystem parameters, COMPRESS
     <maxLength>40</maxLength>
     </string>
     </variable>
-            (c) Locate and remove these lines: 
+
+(c) Locate and remove these lines: 
+
     <variable name="SPT01INL" scope="instance">
     <label>SPT01INL</label>
     <abstract>SPT01 INLINE LENGTH</abstract>
@@ -68,7 +70,11 @@ The PTF for APAR PH24358 removes two existing Db2 subsystem parameters, COMPRESS
     <maxLength>40</maxLength>
     </string>
     </variable>
-            (d) Locate and remove this line: 
+    
+(d) Locate and remove this line: 
+
     <variableValue name="CMPSPT01" scope="instance" ...
-            (e) Locate and remove this line: 
+
+(e) Locate and remove this line: 
+
     <variableValue name="SPT01INL" scope="instance" ...
