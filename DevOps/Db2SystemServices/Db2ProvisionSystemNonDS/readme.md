@@ -74,6 +74,7 @@ The files of the service are stored in a directory in z/OS UNIX System Services 
     - [ph26131_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemNonDS/ph26131_readme.md)
     - [ph14791_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemNonDS/ph14791_readme.md)
     - [ph28183_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemNonDS/ph28183_readme.md)
+    - [ph28280_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemNonDS/ph28280_readme.md)
 
 ## Preparing the environment for the Db2 software service template
 
@@ -234,7 +235,6 @@ If you are using the sample artifacts before building your own template, you mus
 |`PARAMDEG`|`0`|`16`|
 |`PALK` (`PREVENT_ALTERTB_LIMITKEY`)|`NO`|`YES`|
 |`PFUP` (`PCTFREE_UPD`)|`0`|`AUTO`|
-|`PCLOSEN `|`10`|`15`|
 |`SMFCOMP`|`OFF`|`ON`|
 |`SYNCVAL`|`NO`|`0`|
 |`TBSBPOOL`|`BP0`|`BP1`|
