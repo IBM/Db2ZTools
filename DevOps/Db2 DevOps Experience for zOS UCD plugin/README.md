@@ -6,15 +6,24 @@ The Db2 DevOps Experience plug-in includes steps to provision, deprovision, anal
 
 **<ins>Platform Support:</ins>**
 
--   Db2 DevOps Experience is available on z/OS V1.0.0 and later
+-   Db2 DevOps Experience is available on z/OS V1.2.0 and later
 
 -   This plug-in requires UrbanCode Deploy 6.2.0 and later.
 
 **<ins>Mainframe:</ins>**
 
+Version 1.2
+
+The version 1.2 includes the following enhancements:
+Support for DOE V1.2 APIs
+The ability to work with untrusted (self-signed) SSL certificates
+The ability to print REST API requests and responses
+General quality improvements (error handling, debugging, messaging)
+
+
 Version 1.0
 
-Release Notes: (Released July 12, 2019)
+Release Notes: (Updated March 09, 2021)
 
 
 **Available Steps**
