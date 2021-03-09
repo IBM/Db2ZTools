@@ -15,10 +15,10 @@ The Db2 DevOps Experience plug-in includes steps to provision, deprovision, anal
 Version 1.2
 
 The version 1.2 includes the following enhancements:
-Support for DOE V1.2 APIs
-The ability to work with untrusted (self-signed) SSL certificates
-The ability to print REST API requests and responses
-General quality improvements (error handling, debugging, messaging)
+-   Support for DOE V1.2 APIs
+-   The ability to work with untrusted (self-signed) SSL certificates
+-   The ability to print REST API requests and responses
+-   General quality improvements (error handling, debugging, messaging)
 
 
 Version 1.0
