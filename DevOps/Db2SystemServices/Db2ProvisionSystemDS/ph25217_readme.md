@@ -5,20 +5,24 @@
 ## Job `dsntijuz`:
 
 (a) Locate these two lines:
+
     #formatLine("               REORG_LIST_PROCESSING=${RLPR},", 
             71,15,false,"X")                        
 
 (b) Add the following two lines directly -before- the first of the above lines (a):
+
     #formatLine("               REORG_INDEX_NOSYSUT1=${RINSU},", 
             71,15,false,"X") 
 
 ## z/OSMF variable input files `dsntivin` and `dsntivia`: 
 
 (a) In both files, locate these two line:
+
     ## "UZSORT" on panel DSNTIP63: UTILS USE ZSORT
     ## The UTILS_USE_ZSORT subsystem parameter specifies...
 
 (b) In both files, add the following three lines directly -before- the above lines (a):
+
     ## "RINSU" on panel DSNTIP63: REORG INDEX NOSYSUT1
     ## The REORG_INDEX_NOSYSUT1 subsystem parameter specifies whether the REORG INDEX SHRLEVEL REFERENCE or CHANGE utility should avoid using the SYSUT1 or work data set to hold the unloaded index keys. 
     RINSU=x
@@ -28,9 +32,11 @@
 ## z/OSMF workflow definition file `dsntiwpc.xml`:
 
 (a) Locate this line: 
+
     <variable name="RLFERRD" scope="instance">                             
 
 (b) Add the following 11 lines directly -before- the above line (a):
+
     <variable name="RINSU" scope="instance">
     <label>RINSU</label>
     <abstract>REORG INDEX NOSYSUT1</abstract>
@@ -44,9 +50,11 @@
     </variable>
 
 (c) Locate this line
+
     <variableValue name="RLFERRD" scope="instance" required="false" noPromptIfSet="true"></variableValue>
 
 (d) Add this line directly -before- the above line (c):
+
     <variableValue name="RINSU" scope="instance" required="false" noPromptIfSet="true"></variableValue>
 
 

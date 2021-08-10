@@ -5,10 +5,12 @@
 ## Job `dsntijuz`:
 
 (a) Locate these two lines:
+
     #formatLine("               REORG_INDEX_NOSYSUT1=${RINSU},", 
             71,15,false,"X")                        
 
 (b) Add the following four lines directly -before- the first of the above lines (a):
+
     #formatLine("               REORG_IC_LIMIT_DASD=${RICLD},", 
             71,15,false,"X")                                
     #formatLine("               REORG_IC_LIMIT_TAPE=${RICLT},", 
@@ -17,10 +19,12 @@
 ## z/OSMF variable input files `dsntivin` and `dsntivia`: 
 
 (a) In both files, locate these two line:
+
     ## "RINSU" on panel DSNTIP63: REORG INDEX NOSYSUT1
     ## The REORG_INDEX_NOSYSUT1 subsystem parameter specifies...
 
 (b) In both files, add the following six lines directly -before- the above lines (a):
+
     ## "RICLD" on panel DSNTIP63: REORG IC LIMIT DASD
     ## The REORG_IC_LIMIT_DASD subsystem parameter specifies the maximum number of sequential DASD image copies that the REORG TABLESPACE utility can allocate.
     RICLD=x
@@ -34,9 +38,11 @@
 ## z/OSMF workflow definition file `dsntiwpc.xml`:
 
 (a) Locate this line: 
+
     <variable name="RINSU" scope="instance">                              
 
 (b) Add the following 22 lines directly -before- the above line (a):
+
     <variable name="RICLD" scope="instance">
     <label>RICLD</label>
     <abstract>REORG IC LIMIT DASD</abstract>
@@ -61,9 +67,11 @@
     </variable>
 
 (c) Locate this line
+
     <variableValue name="RINSU" scope="instance" required="false" noPromptIfSet="true"></variableValue>
 
 (d) Add these two directly -before- the above line (c):
+
     <variableValue name="RICLD" scope="instance" required="false" noPromptIfSet="true"></variableValue>
     <variableValue name="RICLT" scope="instance" required="false" noPromptIfSet="true"></variableValue>
 
