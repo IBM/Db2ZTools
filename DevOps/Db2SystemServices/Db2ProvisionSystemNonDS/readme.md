@@ -76,7 +76,10 @@ The files of the service are stored in a directory in z/OS UNIX System Services 
     - [ph28183_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemNonDS/ph28183_readme.md)
     - [ph28280_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemNonDS/ph28280_readme.md)
     - [ph25217_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemNonDS/ph25217_readme.md)
+    - [ph30978_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemNonDS/ph30978_readme.md)
     - [pi75518_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemNonDS/pi75518_readme.md)
+    - [ph36071_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemNonDS/ph36071_readme.md)
+    - [ph36908_readme.md](https://github.com/IBM/Db2ZTools/tree/master/DevOps/Db2SystemServices/Db2ProvisionSystemNonDS/ph36908_readme.md)
 
 ## Preparing the environment for the Db2 software service template
 

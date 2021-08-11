@@ -74,5 +74,3 @@
 
     <variableValue name="RICLD" scope="instance" required="false" noPromptIfSet="true"></variableValue>
     <variableValue name="RICLT" scope="instance" required="false" noPromptIfSet="true"></variableValue>
-
-

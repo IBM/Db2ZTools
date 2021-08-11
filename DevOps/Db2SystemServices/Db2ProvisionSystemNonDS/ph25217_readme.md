@@ -56,6 +56,3 @@
 (d) Add this line directly -before- the above line (c):
 
     <variableValue name="RINSU" scope="instance" required="false" noPromptIfSet="true"></variableValue>
-
- 
-
