@@ -50,7 +50,7 @@
 
 (c) Locate this line:
 
-    <variableValue name="AUTHCACH" scope="instance" required="false" noPromptIfSet="true"><variableValue>
+    <variableValue name="AUTHCACH" scope="instance" required="false" noPromptIfSet="true"></variableValue>
 
 (d) Add this line directly -before- the above line (c):
 
